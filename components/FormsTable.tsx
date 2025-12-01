@@ -190,7 +190,9 @@ export default function FormsTable({ initial, canEdit = false }: Props) {
                   </Link>
 
                   <button
-                    onClick={() => setDeleteModal({ id: f.id, title: f.title })}
+                    onClick={() =>
+                      setDeleteModal({ id: f.id || "", title: f.title })
+                    }
                     className="ml-2 inline-flex items-center rounded border border-red-200 bg-red-50 px-2 py-1 text-sm text-red-700 hover:bg-red-100 focus:outline-none focus:ring"
                     aria-label={`Quick delete ${f.title}`}
                     title="Quick delete"
