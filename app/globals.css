@@ -2,7 +2,7 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #000000;
 }
 
 @theme inline {
@@ -12,15 +12,43 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* Keep background white regardless of OS dark-mode preference to match design */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* keep the same white background but allow foreground to adjust if desired */
+    --background: #ffffff;
+    --foreground: #111827; /* dark text for readability */
   }
 }
 
 body {
-  background: var(--background);
+  /* force white background across the app */
+  background: #ffffff;
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+html,
+body,
+#__next {
+  height: 100%;
+}
+
+/* remove default margins that can cause scroll */
+body {
+  margin: 0;
+}
+
+/* Accessible focus styles */
+:where(:focus-visible) {
+  outline: 3px solid #2563eb; /* blue-600 */
+  outline-offset: 2px;
+}
+
+button:focus,
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
 }

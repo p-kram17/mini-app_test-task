@@ -1,36 +1,98 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Forms Dashboard Mini-App
 
-## Getting Started
+A modern forms management system with role-based authentication, CSV export, and real-time updates.
 
-First, run the development server:
+![Next.js](https://img.shields.io/badge/Next.js-15-black)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind-v4-38bdf8)
+
+## ✨ Features
+
+- **Full CRUD Operations** - Create, read, update, delete forms
+- **Role-Based Access** - Admin (full access) and Individual (view-only) roles
+- **NextAuth Integration** - Secure JWT session-based authentication
+- **CSV Export** - Download forms data with one click
+- **Confirmation Modals** - Accessible dialogs for destructive actions
+- **Advanced Filtering** - Filter by status, sort by any column
+- **Form Validation** - React Hook Form + Zod schemas
+- **Toast Notifications** - Real-time feedback for all actions
+- **SEO Optimized** - Dynamic metadata for all pages
+- **Responsive Design** - Mobile-first with Tailwind CSS v4
+
+## 🛠️ Tech Stack
+
+**Core:** Next.js 15 (App Router) • TypeScript • React 19 • Tailwind CSS v4  
+**Auth:** NextAuth v5 (JWT sessions)  
+**Forms:** React Hook Form • Zod validation  
+**State:** Zustand • React Toastify
+
+- **Form Handling**: [React Hook Form](https://react-hook-form.com/) + [Zod](https://zod.dev/)
+- **State Management**: [Zustand](https://zustand-demo.pmnd.rs/)
+- **Notifications**: [React Toastify](https://fkhadra.github.io/react-toastify/)
+- **Data Storage**: File-based JSON storage (in-memory for demo)
+
+## 📦 Installation
+
+### Prerequisites
+
+- Node.js 18+
+- npm, yarn, or pnpm
+
+### Setup Steps
+
+1. **Install dependencies**
+
+```bash
+npm install
+```
+
+2. **Set up environment variables**
+
+```bash
+cp .env.local.example .env.local
+```
+
+Generate a secure secret and add it to `.env.local`:
+
+```bash
+openssl rand -base64 32
+```
+
+Edit `.env.local`:
+
+```env
+NEXTAUTH_SECRET=<your-generated-secret>
+NEXTAUTH_URL=http://localhost:3000
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+```
+
+3. **Run the development server**
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🎯 Usage
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+**Login:** Go to `/login` → Enter email → Select role (Admin/Individual)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+**Admin:** Create, edit, delete forms • Export CSV • View dashboard  
+**Individual:** View forms (read-only) • Filter and sort
 
-## Learn More
+## � Environment Variables
 
-To learn more about Next.js, take a look at the following resources:
+Create `.env.local` with:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```env
+NEXTAUTH_SECRET=<generate with: openssl rand -base64 32>
+NEXTAUTH_URL=http://localhost:3000
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📊 API Routes
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `GET /api/forms` - List all forms
+- `POST /api/forms` - Create form (Admin only)
+- `GET /api/forms/[id]` - Get single form
+- `PUT /api/forms/[id]` - Update form (Admin only)
+- `DELETE /api/forms/[id]` - Delete form (Admin only)
