@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { store } from "../../../lib/fileStore";
 import { formListSchema, formSchema } from "../../../lib/formSchema";
 import { auth } from "../../../auth";
+import { headers } from "next/headers";
 
 export async function GET() {
   try {
@@ -16,13 +17,20 @@ export async function GET() {
 }
 
 async function isAdmin() {
-  const session = await auth();
-  return (session?.user as any)?.role === "Admin";
+  try {
+    const session = await auth();
+    return (session?.user as any)?.role === "Admin";
+  } catch (err) {
+    console.error("Auth error in API route:", err);
+    return false;
+  }
 }
 
 export async function POST(req: Request) {
-  if (!(await isAdmin()))
+  const adminCheck = await isAdmin();
+  if (!adminCheck) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
   const body = await req.json();
   try {
     // Let the store create id and updatedAt; validate the client fields via formSchema

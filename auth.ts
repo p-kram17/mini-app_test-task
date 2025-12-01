@@ -51,4 +51,5 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
   session: {
     strategy: "jwt",
   },
+  trustHost: true, // Required for production
 });

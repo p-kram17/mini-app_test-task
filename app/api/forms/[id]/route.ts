@@ -4,8 +4,13 @@ import { formSchema } from "../../../../lib/formSchema";
 import { auth } from "../../../../auth";
 
 async function isAdmin() {
-  const session = await auth();
-  return (session?.user as any)?.role === "Admin";
+  try {
+    const session = await auth();
+    return (session?.user as any)?.role === "Admin";
+  } catch (err) {
+    console.error("Auth error in API route:", err);
+    return false;
+  }
 }
 
 export async function GET(req: Request) {
@@ -18,8 +23,10 @@ export async function GET(req: Request) {
 }
 
 export async function PUT(req: Request) {
-  if (!(await isAdmin()))
+  const adminCheck = await isAdmin();
+  if (!adminCheck) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
   const { pathname } = new URL(req.url);
   const parts = pathname.split("/");
   const id = parts[parts.length - 1];
@@ -46,8 +53,10 @@ export async function PUT(req: Request) {
 }
 
 export async function DELETE(req: Request) {
-  if (!(await isAdmin()))
+  const adminCheck = await isAdmin();
+  if (!adminCheck) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
   const { pathname } = new URL(req.url);
   const parts = pathname.split("/");
   const id = parts[parts.length - 1];

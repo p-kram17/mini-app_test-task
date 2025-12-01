@@ -4,12 +4,22 @@ import { formListSchema, formSchema, type Form } from "./formSchema";
 
 const DATA_PATH = path.join(process.cwd(), "data", "forms.json");
 
+// In-memory store for serverless environments (Vercel)
+let memoryStore: Form[] | null = null;
+
 function readData(): Form[] {
+  // Use in-memory store if available
+  if (memoryStore !== null) {
+    return memoryStore;
+  }
+
+  // Try to read from file (works in development)
   try {
     const raw = fs.readFileSync(DATA_PATH, "utf-8");
     const parsed = JSON.parse(raw);
     try {
-      return formListSchema.parse(parsed);
+      memoryStore = formListSchema.parse(parsed);
+      return memoryStore;
     } catch (innerErr) {
       // Attempt to repair common issues (missing/invalid uuid, invalid dates)
       if (Array.isArray(parsed)) {
@@ -52,22 +62,35 @@ function readData(): Form[] {
         });
 
         try {
-          return formListSchema.parse(repaired);
+          memoryStore = formListSchema.parse(repaired);
+          return memoryStore;
         } catch (finalErr) {
           console.error("Failed to repair seed data:", finalErr);
-          return [];
+          memoryStore = [];
+          return memoryStore;
         }
       }
       throw innerErr;
     }
   } catch (err) {
     console.error("Failed to read seed data:", err);
-    return [];
+    // Initialize with empty array if file doesn't exist
+    memoryStore = [];
+    return memoryStore;
   }
 }
 
 function writeData(forms: Form[]) {
-  fs.writeFileSync(DATA_PATH, JSON.stringify(forms, null, 2), "utf-8");
+  // Update in-memory store
+  memoryStore = forms;
+
+  // Try to write to file (only works in development)
+  try {
+    fs.writeFileSync(DATA_PATH, JSON.stringify(forms, null, 2), "utf-8");
+  } catch (err) {
+    // Silently fail in production (Vercel has read-only filesystem)
+    console.log("File write skipped (read-only filesystem)");
+  }
 }
 
 export const store = {
