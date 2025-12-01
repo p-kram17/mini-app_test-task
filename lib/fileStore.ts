@@ -95,12 +95,14 @@ function writeData(forms: Form[]) {
 
 export const store = {
   list(): Form[] {
-    return readData().sort(
+    const data = readData();
+    return data.sort(
       (a, b) => Date.parse(b.updatedAt) - Date.parse(a.updatedAt)
     );
   },
   get(id: string) {
-    return readData().find((f) => f.id === id) || null;
+    const data = readData();
+    return data.find((f) => f.id === id) || null;
   },
   create(input: Partial<Form>): Form {
     const toCreate = formSchema.parse({
